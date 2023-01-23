@@ -24,10 +24,10 @@
 		    height: 100vh;
 		}
 		.main-form{
-			padding: 10px 10px;
+			padding: 50px 10px 10px 10px;
 		    flex-wrap: wrap;
 		    display: flex;
-		    justify-content: center;
+		    justify-content: center; 
 		}
 		.main-form input{
 			display: block;
@@ -48,15 +48,20 @@
 			height: 30px;	
 
 		}
-		#convert{
+		#clear{
+			background: #DD5144!important;
+		}
+		#convert, #clear{
 			width: 100px;
 			border: none;
 			height: 30px;
-			background-color: #fff; 
+			background-color: #4C8BF5; 
 			margin-top:10px;
+			margin-left:10px;
+    		color: #fff!important;
 		}
 		.detail-form{
-			padding: 0px 10px 10px 10px;
+			padding: 0px 10px 50px 10px;
 		}
 		.detail-form img{
 			width: 100%;
@@ -64,6 +69,9 @@
 		#title{
 			margin: 2px 0px!important;
     		color: #000!important;
+    		text-overflow: ellipsis;
+		    white-space: nowrap;
+		    overflow: hidden;
 		}
 
 		#formats{
@@ -85,29 +93,86 @@
 		    text-decoration: none;
     		color: #000;
 		}
+		.copyright{
+			position: fixed;
+			bottom: 0;
+			background-color: #FFCD46;
+			box-shadow: 0px 0px 20px rgb(0 0 0 / 10%);
+			display: block;
+			width: 100%;
+			color: #000;
+			text-align: center;
+			padding: 5px 0px;
+		}
+		.toptitle{
+			position: fixed;
+			top: 0;
+			background-color: #fff;
+			box-shadow: 0px 0px 20px rgb(0 0 0 / 10%);
+			display: block;
+			width: 100%;
+			color: #000;
+			text-align: center;
+			padding: 5px 0px;
+			z-index: 10;
+		}
+		.novideo{
+			background-color: white;
+			color: #000;
+			text-align: center;
+			padding: 30px 10px;
+			margin: 10px;
+			display: none;
+			font-size: 14px;
+		}
+		.processing{
+			background-color: white;
+			color: #000;
+			text-align: center;
+			padding: 10px 10px;
+			margin: 10px;
+			font-size: 14px;
+			display: none;
+		}
 	</style>
 </head>
 <body>
+	<div class="toptitle"> Video Downloader </div>
+
 	<div class="main-form">
-		<input type="text" id="url" value="https://youtu.be/I7dRB7mTtLE">
+		<input type="text" id="url" placeholder="Enter link here...">
+	    <button id="clear">clear</button>
 	    <button id="convert">submit</button>
 	</div>
-
+	<div class="novideo">
+		<h2>No Video Found in this url. Please check it once. Thank You.</h2>
+	</div> 
+	<div class="processing">
+		<h2>Processing...</h2>
+	</div> 
 	<div class="detail-form">
 		<p id="title"></p>
 		<img id="image">
 		<div id="formats"></div>
 	</div>
 
+	
+
+	<div class="copyright"> Developed by Mr Xdin </div>
+
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$('#convert').click(function(){
+		$('.novideo').hide();
+		$('.processing').show();
 		let url = $('#url').val();
 		
 		const data = { url : url };
-
+		$('#title').html('');
+		$('#image').hide('');
+		$('#formats').html('');
 		fetch('https://ssyoutube.com/api/convert', {
 		  method: 'POST',
 		  headers: {
@@ -117,32 +182,46 @@
 		})
 		  .then((response) => response.json())
 		  .then((data) => {
+			$('.processing').hide();
 		    if(!data.hasOwnProperty('cipher')){
-		    	alert('no data found');
+		    	if(data.hasOwnProperty('hosting')){
+		    		if(data.hosting == 'instagram.com') showData(data);
+		    		else $('.novideo').show();
+		    	} 
+		    	else $('.novideo').show();
 		    }
 		    else{
 		    	showData(data);
 		    }
 		  })
 		  .catch((error) => {
-		    console.warn(error);
+		$('.processing').hide();
+		    $('.novideo').show();
 		  });
 	});
 
 	function showData(data){
-		console.log(data);
+		$('.processing').hide();
 		let title = data.meta.title;
 		let image = data.thumb;
 		let formats = data.url;
 		$('#title').text(title);
 		$('#image').attr('src', image);
+		$('#image').show('500');
 
 		let formatContents = '';
 		for(let i=0; i < formats.length; i++){
 			formatsData = formats[i];
-			formatContents += `<a href="${formatsData.url}" target="_blank" download="${formatsData.name}"> ${formatsData.subname}.${formatsData.name} ${formatsData.no_audio ? '🔇' : '🔊'}  </a><br>`;
+			formatContents += `<a href="${formatsData.url}" target="_blank" download="${formatsData.name}"> ${formatsData.subname || 'Instagram'}.${formatsData.name} ${formatsData.no_audio ? '🔇' : '🔊'}  </a><br>`;
 		}
 		$('#formats').append(formatContents);
 	}
+
+	$('#clear').click(function(){
+		$('#url').val('');
+		$('#title').html('');
+		$('#image').hide('');
+		$('#formats').html('');
+	});
 </script>
 </html>
