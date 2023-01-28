@@ -23,6 +23,9 @@
 		    background-color: #f1f1f1;
 		    height: 100vh;
 		}
+		img{
+			max-width: 500px;
+		}
 		.main-form{
 			padding: 50px 10px 10px 10px;
 		    flex-wrap: wrap;
@@ -61,7 +64,7 @@
     		color: #fff!important;
 		}
 		.detail-form{
-			padding: 0px 10px 50px 10px;
+			padding: 0px 10px 10px 10px;
 		}
 		.detail-form img{
 			width: 100%;
@@ -134,6 +137,56 @@
 			font-size: 14px;
 			display: none;
 		}
+		.tabs{
+			display: flex;
+			justify-content: center;
+			align-items: center; 
+			box-shadow :0px 0px 20px rgb(0 0 0 / 10%);
+		}
+		.tabs p{
+			width: 50%;
+			text-align: center;
+			background: #fff;  
+			margin: 0px;
+			padding: 10px 0px; 
+    		color: #000;
+    		font-weight: bold;
+		} 
+		table {
+		  border-collapse: collapse;
+		  width: 100%;
+		  text-align: center;
+		}
+
+
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		  text-align: center;
+			color: #000; 
+		} 
+		tr:nth-child(even) {
+			background-color: #e3e3e3;
+		}
+		thead tr{
+			box-shadow :0px 0px 20px rgb(0 0 0 / 10%);
+			background-color: #1DA462;
+			color: #000; 
+		}
+		.downloadbtn{
+			text-decoration: none;
+			background-color: #4C8BF5;
+			color: #000;
+			padding: 3px 10px;
+    		border-radius: 14px;
+		}
+		.output{ 
+		  display: none;
+		}
+		.bg-green{
+			background:#1da462!important;
+			color: #000!important;
+		}
 	</style>
 </head>
 <body>
@@ -156,6 +209,24 @@
 		<div id="formats"></div>
 	</div>
 
+	<div class="tabs">
+		<p class="output videoact">Video</p>
+		<p class="output audioact">Audio</p> 
+	</div>
+
+	<table class="output">	
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Format</th>
+				<th>Size</th>
+			</tr>
+		</thead>
+		<tbody id="avdiv">
+			
+		</tbody>
+	</table>
+
 	
 
 	<div class="copyright"> Developed by Mr Xdin </div>
@@ -169,10 +240,12 @@
 		$('.processing').show();
 		let url = $('#url').val();
 		
-		const data = { url : url };
+		// const data = { url : url };
 		$('#title').html('');
 		$('#image').hide('');
 		$('#formats').html('');
+		hitfun(url);
+		return;
 		fetch('https://ssyoutube.com/api/convert', {
 		  method: 'POST',
 		  headers: {
@@ -197,24 +270,53 @@
 		  .catch((error) => {
 		$('.processing').hide();
 		    $('.novideo').show();
-		  });
+		});
 	});
 
+		let video = '';
+		let audio = '';
 	function showData(data){
+		video = '';
+		audio = '';
 		$('.processing').hide();
-		let title = data.meta.title;
-		let image = data.thumb;
-		let formats = data.url;
+		let title = data.title;
+		let image = data.thumbnail;
+		let formats = data.medias;
 		$('#title').text(title);
 		$('#image').attr('src', image);
 		$('#image').show('500');
-
-		let formatContents = '';
+		// console.log(formats);
+		// return;
+		$('#avdiv').html(''); 
 		for(let i=0; i < formats.length; i++){
 			formatsData = formats[i];
-			formatContents += `<a href="${formatsData.url}" target="_blank" download="${formatsData.name}"> ${formatsData.subname || 'Instagram'}.${formatsData.name} ${formatsData.no_audio ? '🔇' : '🔊'}  </a><br>`;
+			if(formatsData.audioAvailable && formatsData.videoAvailable == false ){
+				audio += `<tr>
+					<td>${formatsData.quality}</td>
+					<td>${formatsData.extension}</td>
+					<td><a class="downloadbtn" href="${formatsData.url}" target="_blank" download="${formatsData.url}"> ${formatsData.formattedSize} </a></td>
+				</tr>`;
+			}
+			else{
+				video += `<tr>
+					<td>${formatsData.quality} ${formatsData.audioAvailable ? '🔊':'🔇'}</td>
+					<td>${formatsData.extension}</td>
+					<td><a class="downloadbtn" href="${formatsData.url}" target="_blank" download="${formatsData.url}"> ${formatsData.formattedSize} </a></td>
+				</tr>`;	
+			} 
 		}
-		$('#formats').append(formatContents);
+
+		if(video == ''){
+			video = `<tr><td colspan="3"> No Video Data Found </td></tr>`;
+		}
+		if(audio == ''){
+			audio = `<tr><td colspan="3"> No Audio Data Found </td></tr>`;
+		}
+
+
+		$('#avdiv').append(video);
+		$('.output').show();
+		$('.videoact').addClass('bg-green');
 	}
 
 	$('#clear').click(function(){
@@ -222,6 +324,47 @@
 		$('#title').html('');
 		$('#image').hide('');
 		$('#formats').html('');
+		$('.output').hide();
 	});
+
+	$('.videoact').click(function(){
+		$('#avdiv').html('');
+		$('#avdiv').append(video);
+		$(this).addClass('bg-green');
+		$('.audioact').removeClass('bg-green');
+	});
+	$('.audioact').click(function(){
+		$('#avdiv').html('');
+		$('#avdiv').append(audio);
+		$(this).addClass('bg-green');
+		$('.videoact').removeClass('bg-green');
+	});
+
+	// hitfun();
+
+	function hitfun(url){ 
+		const payload = { url : url, token:"aa7a97b48dea83a31f31e864c3cdc71083e1625e986d2358619642a0dee6600c" }; 
+		fetch('https://givefastlink.com/wp-json/aio-dl/video-data/', {
+		  method: 'POST',
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify(payload),
+		})
+		  .then((response) => response.json())
+		  .then((data) => {
+			$('.processing').hide(); 
+		    if(data.hasOwnProperty('error')){
+		    	$('.novideo').show();
+		    }
+		    else{
+		    	showData(data);
+		    }
+		  })
+		  .catch((error) => {
+		$('.processing').hide();
+		    $('.novideo').show();
+		  });
+	}
 </script>
 </html>
