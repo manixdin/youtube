@@ -43,8 +43,8 @@
 		    font-size: inherit;
 		    height: 100%;
 		    outline: 0;
-		    padding-inline-end: 44px;
-		    padding-inline-start: 52px;
+		    padding-inline-end: 10px;
+		    padding-inline-start: 17px;
 		    position: relative;
 		    width: 100%;
 		    border-radius: 17px; 
@@ -198,10 +198,10 @@
 	    <button id="convert">submit</button>
 	</div>
 	<div class="novideo">
-		<h2>No Video Found in this url. Please check it once. Thank You.</h2>
+		<p>No Video Found in this url. Please check it once. Thank You.</p>
 	</div> 
 	<div class="processing">
-		<h2>Processing...</h2>
+		<p>Processing...</p>
 	</div> 
 	<div class="detail-form">
 		<p id="title"></p>
@@ -236,7 +236,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$('#convert').click(function(){
-		$('.novideo').hide();
+		$('.novideo').hide(); 
+		$('.output').hide();
 		$('.processing').show();
 		let url = $('#url').val();
 		
@@ -270,6 +271,7 @@
 		  .catch((error) => {
 		$('.processing').hide();
 		    $('.novideo').show();
+		    $('.output').hide();
 		});
 	});
 
