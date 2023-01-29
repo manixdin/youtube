@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YT</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<style>
+		*, *::before, *::after {
+		    -webkit-box-sizing: border-box;
+		    box-sizing: border-box;
+		    font-family: 'Poppins', sans-serif;
+		}
+		body {
+		    margin: 0;
+		    font-family: "Open Sans", sans-serif;
+		    font-size: 14px;
+		    font-weight: 400;
+		    line-height: 1.5;
+		    color: #707070;
+		    text-align: left;
+		    background-color: #f1f1f1;
+		    height: 100vh;
+		}
+		.main-form{
+			padding: 10px 10px 10px 10px;
+		    flex-wrap: wrap;
+		    display: flex;
+		    justify-content: center; 
+		}
+		.main-form input{
+			display: block;
+			width: 100%; 
+			background-color: #ffffffff;
+		    border: none;
+		    border-radius: #dadce0ff;
+		    color: #000;
+		    font-family: inherit;
+		    font-size: inherit;
+		    height: 100%;
+		    outline: 0;
+		    padding-inline-end: 10px;
+		    padding-inline-start: 17px;
+		    position: relative;
+		    width: 100%;
+		    border-radius: 17px; 
+			height: 30px;	
+
+		}
+		#clear{
+			background: #DD5144!important;
+		}
+		#convert, #clear{
+			width: 100px;
+			border: none;
+			height: 30px;
+			background-color: #4C8BF5; 
+			margin-top:10px;
+			margin-left:10px;
+    		color: #fff!important;
+		}
+		.detail-form{
+			padding: 0px 10px 50px 10px;
+		}
+		.detail-form img{
+			width: 100%;
+		}
+		#title{
+			margin: 2px 0px!important;
+    		color: #000!important;
+    		text-overflow: ellipsis;
+		    white-space: nowrap;
+		    overflow: hidden;
+		}
+
+		#formats{
+			display: flex;
+			flex-wrap:wrap;
+		}
+		#formats a:first-child{
+			background-color: #4285F4!important;
+			color: #fff!important;
+		    width: 100%; 
+    		border-radius: 20px;
+		}
+		#formats a{
+		    width: 48%;
+		    font-size: 12px!important;
+		    box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%) !important;
+		    background: #fff;
+		    margin: 2px;
+		    text-align: center;
+		    padding: 3px;
+		    text-decoration: none;
+    		color: #000;
+		}
+		.copyright{
+			position: fixed;
+			bottom: 0;
+			background-color: #FFCD46;
+			box-shadow: 0px 0px 20px rgb(0 0 0 / 10%);
+			display: block;
+			width: 100%;
+			color: #000;
+			text-align: center;
+			padding: 5px 0px;
+		}
+		.toptitle{
+			position: fixed;
+			top: 0;
+			background-color: #fff;
+			box-shadow: 0px 0px 20px rgb(0 0 0 / 10%);
+			display: block;
+			width: 100%;
+			color: #000;
+			text-align: center;
+			padding: 5px 0px;
+			z-index: 10;
+		}
+		.novideo{
+			background-color: white;
+			color: #000;
+			text-align: center;
+			padding: 30px 10px;
+			margin: 10px;
+			display: none;
+			font-size: 14px;
+		}
+		.processing{
+			background-color: white;
+			color: #000;
+			text-align: center;
+			padding: 10px 10px;
+			margin: 10px;
+			font-size: 14px;
+			display: none;
+		}
+		img{
+			max-width: 500px;
+		}
+		.top-two{
+			margin-top:31px;
+			display: flex; 
+
+		}
+		.top-two a{
+			width: 50%;
+			text-align: center;
+			text-decoration: none;
+			padding: 3px 0px;
+		}
+		.top-two .Youtube{
+		  	background: #fff; 
+		}
+		.top-two .Instagram{
+			color: #fff;
+		  	background: #f09433; 
+			background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+			background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+			background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+			box-shadow: 0px 0px 28px rgb(0 0 0 / 66%);
+		 }
+	</style>
+</head>
+<body>
+	<div class="toptitle">Video Downloader </div>
+	<div class="top-two">
+		<a href="index.html" class="Youtube">Youtube</a>
+		<a class="Instagram">Instagram</a> 
+	</div>
+
+	<div class="main-form">
+		<input type="text" id="url" placeholder="Enter instagram link here...">
+	    <button id="clear">clear</button>
+	    <button id="convert">submit</button>
+	</div>
+	<div class="novideo">
+		<h2>No Video Found in this url. Please check it once. Thank You.</h2>
+	</div> 
+	<div class="processing">
+		<h2>Processing...</h2>
+	</div> 
+	<div class="detail-form">
+		<p id="title"></p>
+		<img id="image">
+		<div id="formats"></div>
+	</div>
+
+	
+
+	<div class="copyright"> Developed by Mr Xdin </div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$('#convert').click(function(){
+		$('.novideo').hide();
+		$('.processing').show();
+		let url = $('#url').val();
+		
+		const data = { url : url };
+		$('#title').html('');
+		$('#image').hide('');
+		$('#formats').html('');
+		fetch('https://ssyoutube.com/api/convert', {
+		  method: 'POST',
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify(data),
+		})
+		  .then((response) => response.json())
+		  .then((data) => {
+			$('.processing').hide();
+		    if(!data.hasOwnProperty('cipher')){
+		    	if(data.hasOwnProperty('hosting')){
+		    		if(data.hosting == 'instagram.com') showData(data);
+		    		else $('.novideo').show();
+		    	} 
+		    	else $('.novideo').show();
+		    }
+		    else{
+		    	showData(data);
+		    }
+		  })
+		  .catch((error) => {
+		$('.processing').hide();
+		    $('.novideo').show();
+		  });
+	});
+
+	function showData(data){
+		$('.processing').hide();
+		let title = data.meta.title;
+		let image = data.thumb;
+		let formats = data.url;
+		$('#title').text(title);
+		$('#image').attr('src', image);
+		$('#image').show('500');
+
+		let formatContents = '';
+		for(let i=0; i < formats.length; i++){
+			formatsData = formats[i];
+			formatContents += `<a href="${formatsData.url}" target="_blank" download="${formatsData.name}"> ${formatsData.subname || 'Instagram'}.${formatsData.name} ${formatsData.no_audio ? '🔇' : '🔊'}  </a><br>`;
+		}
+		$('#formats').append(formatContents);
+	}
+
+	$('#clear').click(function(){
+		$('#url').val('');
+		$('#title').html('');
+		$('#image').hide('');
+		$('#formats').html('');
+	});
+</script>
+</html>
